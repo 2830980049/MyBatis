@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="goodsParam">
+    <select id="selectAll" resultType="com.edu.mybatis.entity.GoodsParam">
+        select * from t_goods_param order by gp_id desc limit 10
+    </select>
+</mapper>
