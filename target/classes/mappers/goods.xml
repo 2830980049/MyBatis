@@ -3,7 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goods">
-    <select id="selectAll" resultType="com.edu.mybatis.entity.Goods">
+<!-- 开启二级缓存
+     eviction：缓存清楚策略，当缓存对象数量达到上限后，自动触发对应算法对缓存对象清除
+     1.   LRU：最近最少使用的：移除最长时间不被使用对象
+     2.  FIFO：先进先出：按对象进入缓存的顺序来移除它们
+     3.  SOFT：软引用：移除基于垃圾回收器状态和软引用规则对象
+     4.  WEAK：软引用：更积极地移除基于垃圾收集器状态和软引用规则状态
+
+     flushInterval：代表间隔多长时间自动清空缓存单位毫秒,600000 = 10 分钟
+     size：缓存存储上限，用于保存对象或集合(1个集合算一个对象)的数量上限
+     readOnly：设置 true 代表只返回只读缓存，每次从缓存取出的是缓存对象本身。执行效率较高
+               设置 false 代表每次取出是缓存对象的'副本',每一次取出对象都是不同的，安全性较高
+ -->
+    <cache eviction="LRU" flushInterval="600000" size="520" readOnly="true"></cache>
+
+<!--  useCache = false 代表不使用缓存 不会存入缓存 -->
+    <select id="selectAll" resultType="com.edu.mybatis.entity.Goods" useCache="false">
         select * from t_goods order by goods_id desc limit 10
     </select>
 
@@ -50,16 +65,18 @@
         <result property="category.categoryOrder" column="category_category_order"></result>
     </resultMap>
 
+<!-- flushCache = true 在SQL执行后强制清空缓存 该条结果不会存入缓存  -->
     <select id="selectGoodsDTO" resultMap="rmGoods">
         select g.*, c.*,'1' as test from t_goods g, t_category c
         where g.category_id = c.category_id
     </select>
 
+<!-- flushCache = true 在SQL执行后强制清空缓存   -->
     <insert id="insert"
             parameterType="com.edu.mybatis.entity.Goods"
             useGeneratedKeys="true"
             keyProperty="goodsId"
-            keyColumn="goods_id">
+            keyColumn="goods_id" flushCache="true">
         insert into t_goods(title, sub_title, original_cost, current_price, discount, is_free_delivery,category_id)
         values (#{title},#{subTitle},#{originalCost},#{currentPrice},#{discount},#{isFreeDelivery},#{categoryId});
 --       主键回填
@@ -82,6 +99,63 @@
 
     <delete id="delete" parameterType="Integer">
         delete from t_goods where goods_id = #{value}
+    </delete>
+
+<!-- 动态SQL -->
+    <select id="dynamicsql" parameterType="java.util.Map" resultType="com.edu.mybatis.entity.Goods">
+        select * from t_goods
+        <where>
+        <if test="categoryId != null" >
+            and category_id = #{categoryId}
+        </if>
+        <if test="currentPrice != null">
+            and current_price &lt; #{currentPrice}
+        </if>
+        </where>
+    </select>
+
+<!--
+    resultMap可用于说明1对多或者多对一映射逻辑
+    id 是resultMap属性引用的标志
+    type 指向One实体（Goods）
+  -->
+    <resultMap id="rmGood1" type="com.edu.mybatis.entity.Goods">
+<!--    映射goods对象的主键到goods_id字段    -->
+        <id column="goods_id" property="goodsId"></id>
+<!--
+        collection含义
+        select * from t_goods limit 0,1 得到结果后，对所有Goods对象进行遍历得到goods_id字段值
+        并存入到goodsDeail命名空间的selectByGoodsId的SQL中执行查询
+        将得到的'商品详情'集合赋值给goodsDetails List对象
+-->
+        <collection property="goodsDetailList" select="goodsDetail.selectByGoodsId" column="goods_id"></collection>
+    </resultMap>
+    <select id="selectOneToMany" resultMap="rmGood1">
+        select * from t_goods limit 0,20
+    </select>
+
+    <select id="selectPages" resultType="com.edu.mybatis.entity.Goods">
+        select * from t_goods where current_price &lt; 1000
+    </select>
+
+<!--
+    批量插入数据局限
+    1. 无法获得插入数据的id
+    2. 批量生成的SQL太长，可能会被服务器拒绝
+ -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT into t_goods(title, sub_title, original_cost, current_price, discount, is_free_delivery,category_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.title},#{item.subTitle},#{item.originalCost},#{item.currentPrice},#{item.discount},#{item.isFreeDelivery},#{item.categoryId})
+        </foreach>
+    </insert>
+
+    <delete id="batchdelete" parameterType="java.util.List">
+        delete from t_goods where goods_id in
+        <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
 </mapper>

@@ -5,9 +5,7 @@ public class GoodsDetail {
     private Integer goodsId;
     private String gdPicUrl;
     private Integer gdOrder;
-
-    public GoodsDetail() {
-    }
+    private Goods goods;
 
     @Override
     public String toString() {
@@ -16,7 +14,27 @@ public class GoodsDetail {
                 ", goodsId=" + goodsId +
                 ", gdPicUrl='" + gdPicUrl + '\'' +
                 ", gdOrder=" + gdOrder +
+                ", goods=" + goods +
                 '}';
+    }
+
+    public GoodsDetail(Integer gdId, Integer goodsId, String gdPicUrl, Integer gdOrder, Goods goods) {
+        this.gdId = gdId;
+        this.goodsId = goodsId;
+        this.gdPicUrl = gdPicUrl;
+        this.gdOrder = gdOrder;
+        this.goods = goods;
+    }
+
+    public Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Goods goods) {
+        this.goods = goods;
+    }
+
+    public GoodsDetail() {
     }
 
     public Integer getGdId() {

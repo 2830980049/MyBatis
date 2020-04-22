@@ -34,10 +34,12 @@ public class MyBatisUtils {
      * 创建SqlSession对象，SqlSession是JDBC扩展类，用于与数据交互
      *
      */
-    public static SqlSession openSession(){
+    public static SqlSession openSession(boolean n){
         // 默认对事务自动提交
         // 设置false代表关闭自动提交
-        return sqlSessionFactory.openSession(false);
+        if (n)
+            return sqlSessionFactory.openSession(false);
+        return sqlSessionFactory.openSession();
     }
 
     public static void closeSession(SqlSession sqlSession){

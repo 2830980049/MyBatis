@@ -4,7 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="goodsDetail">
-    <select id="selectAll" resultType="com.edu.mybatis.entity.GoodsDetail">
-        select * from t_goods_detail order by gd_id desc limit 10
+    <select id="selectByGoodsId" resultType="com.edu.mybatis.entity.GoodsDetail" parameterType="Integer">
+        select * from t_goods_detail
+        <where>
+            <if test="goodsId != null">
+                and goods_id = #{value}
+            </if>
+        </where>
+    </select>
+
+
+    <resultMap id="rmGoodsDetail" type="com.edu.mybatis.entity.GoodsDetail">
+        <id column="gd_id" property="gdId"></id>
+        <result column="goods_id" property="goodsId"/>
+        <association property="goods" select="goods.selectById" column="goods_id"/>
+    </resultMap>
+    <select id="selectManyToOne" resultMap="rmGoodsDetail">
+        select * from t_goods_detail limit 100,110;
     </select>
 </mapper>

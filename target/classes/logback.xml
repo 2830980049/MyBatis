@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+<!-- 输出器appender name自定义名称 class 指向 控制台打印输出类   -->
+    <appender name = "console" class = "ch.qos.logback.core.ConsoleAppender">
+<!--    encoder 编码
+        [%thread] 输出线程名称
+        %-5level 日志级别
+        %logger{36} 类产生的日志
+        %msg 日志输出内容
+-->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+<!--
+    日志输出级别(优先级高到低)
+    error：错误 - 系统的故障日志
+    warn： 警告 - 存在风险或使用不到日志
+    info： 一般性消息
+    debug：程序内部用于调试信息
+    trace：程序运行的跟踪信息
+ -->
+<!--    表示输出debug级别(包含)以上的信息-->
+    <root level = "debug">
+<!--     知道   -->
+        <appender-ref ref = "console"/>
+    </root>
+</configuration>

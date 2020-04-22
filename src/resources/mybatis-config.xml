@@ -8,6 +8,18 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+
+<!--  分页插件  -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+<!--         设置数据库类型  -->
+            <property name="helperDialect" value="mysql"/>
+<!--         分页合理化   -->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+
+
     
     <!-- 环境配置  默认指向的数据库 -->
     <environments default="dev">
@@ -16,12 +28,16 @@
 <!--            采用JDBC对数据库事务进行commit/rollback-->
             <transactionManager type="JDBC"></transactionManager>
 <!--            采用连接池方式关了数据库连接-->
-            <dataSource type="POOLED">
-                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://39.106.101.244:3306/babytun?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;userSSL=false&amp;serverTimezone=GMT%2B8"/>
-                <property name="username" value="root"/>
-                <property name="password" value="3228516"/>
-            </dataSource>
+<!--            <dataSource type="POOLED">-->
+                <dataSource type="com.edu.mybatis.DataSource.C3P0DataSourceFactory">
+                    <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+                    <property name="jdbcUrl" value="jdbc:mysql://39.106.101.244:3306/babytun?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;userSSL=false&amp;serverTimezone=GMT%2B8"/>
+                    <property name="user" value="root"/>
+                    <property name="password" value="3228516"/>
+                    <property name="initialPoolSize" value="5"/>
+                    <property name="maxPoolSize" value="520"/>
+                    <property name="minPoolSize" value="5"/>
+                </dataSource>
         </environment>
 
         <environment id="dev2">

@@ -44,7 +44,7 @@ public class MyBatisTest {
     public void MyBatisUntils(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             Connection con = sqlSession.getConnection();
             System.out.println(con);
         }
@@ -60,7 +60,7 @@ public class MyBatisTest {
     public void GoodsSelectAll(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<Goods> goods = sqlSession.selectList("goods.selectAll");
             for (Goods goods1:goods)
                 System.out.println(goods1);
@@ -77,7 +77,7 @@ public class MyBatisTest {
     public void GoodsSelectById(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             Goods goods = sqlSession.selectOne("goods.selectById",1602);
             System.out.println(goods);
         }
@@ -93,7 +93,7 @@ public class MyBatisTest {
     public void GoodsselectByPriceRange(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             Map map = new HashMap();
             map.put("min",100);
             map.put("max",500);
@@ -114,7 +114,7 @@ public class MyBatisTest {
     public void selecrGoodsMap(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<Map> goods = sqlSession.selectList("goods.selecrGoodsMap");
             for (Map goods1:goods)
                 System.out.println(goods1);
@@ -131,7 +131,7 @@ public class MyBatisTest {
     public void selecrGoodsDTO(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<GoodsDTO> goods = sqlSession.selectList("goods.selectGoodsDTO");
             for (GoodsDTO goods1:goods)
                 System.out.println(goods1.getGoods().getTitle()+" "+goods1.getCategory().getCategoryName());
@@ -148,7 +148,7 @@ public class MyBatisTest {
     public void Inserts(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(true);
             Goods goods = new Goods();
             goods.setTitle("测试商品");
             goods.setSubTitle("测试子标题");
@@ -175,7 +175,7 @@ public class MyBatisTest {
     public void update(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(true);
             Goods goods = new Goods();
             goods = sqlSession.selectOne("goods.selectById",739);
             goods.setTitle("更新测试商品");
@@ -196,7 +196,7 @@ public class MyBatisTest {
     public void delete(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(true);
             Goods goods = new Goods();
             int num = sqlSession.insert("goods.delete",739);
             sqlSession.commit();
@@ -211,11 +211,12 @@ public class MyBatisTest {
         }
     }
 
+
     @Test
     public void InsertCategory(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(true);
             Category category = new Category();
             category.setCategoryLevel(1);
             category.setCategoryName("显卡");
@@ -238,7 +239,7 @@ public class MyBatisTest {
     public void CategorySelectAll(){
         SqlSession sqlSession = null;
         try{
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<Category> categories = sqlSession.selectList("category.selectAll");
             for (Category category:categories)
                 System.out.println(category);
@@ -255,7 +256,7 @@ public class MyBatisTest {
     public void GoodsCoverSelectAll(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<GoodsCover> goodsCovers = sqlSession.selectList("goodsCover.selectAll");
             for (GoodsCover goodsCover:goodsCovers)
                 System.out.println(goodsCover);
@@ -272,7 +273,7 @@ public class MyBatisTest {
     public void GoodsDetailSelectAll(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<GoodsDetail> goodsDetails = sqlSession.selectList("goodsDetail.selectAll");
             for (GoodsDetail goodsDetail:goodsDetails)
                 System.out.println(goodsDetail);
@@ -289,7 +290,7 @@ public class MyBatisTest {
     public void ParpamSelectAll(){
         SqlSession sqlSession = null;
         try {
-            sqlSession = MyBatisUtils.openSession();
+            sqlSession = MyBatisUtils.openSession(false);
             List<GoodsParam> goodsParams = sqlSession.selectList("goodsParam.selectAll");
             for (GoodsParam goodsParam:goodsParams)
                 System.out.println(goodsParam);
